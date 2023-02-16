@@ -11,6 +11,6 @@ class LaravelHoliday extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Reinbier\LaravelHoliday\LaravelHoliday::class;
+        return 'laravel-holiday';
     }
 }

@@ -8,7 +8,7 @@ it('can create a Holiday model', function () {
 
     expect($holiday)
         ->year->toBe(now()->year)
-        ->and(Holiday::count())->toBe(1);
+        ->and(Holiday::all())->toHaveCount(1);
 });
 
 it('can add holidays by locale', function () {
@@ -17,6 +17,8 @@ it('can add holidays by locale', function () {
     $holiday->update([
         'days' => Carbon::getYearHolidays($holiday->year),
     ]);
+
+//    var_dump(\Reinbier\LaravelHoliday\Facades\LaravelHoliday::getHolidays()->all());
 
     expect($holiday)
         ->days->toBeArray()->toHaveKeys(['new-year', 'easter', 'pentecost']);

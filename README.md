@@ -5,8 +5,23 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/reinbier/laravel-holiday/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/reinbier/laravel-holiday/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/reinbier/laravel-holiday.svg?style=flat-square)](https://packagist.org/packages/reinbier/laravel-holiday)
 
-This packages helps by providing a Holiday model in your project with all the holidays for a specific year.
+This packages helps by providing a Holiday model in your project with all 
+the holidays for a specific year.
 
+These holidays are then injected into Carbon via the 
+[BusinessDay](https://github.com/kylekatarnls/business-day) 
+package. You can then simply see if a given Carbon instance 
+represents a holiday, via `$carbon->isHoliday()`.
+
+## Use cases
+
+For instance, when managing employees' timesheets. When filling in
+the current week with hours you can show when a day is a holiday, 
+so they would not have to fill in their hours for that day.
+
+Another example would be when you want to show your store's opening hours.
+When echoing your openinghours for each day, you can check whether the
+given date is an holiday and show that you're closed.
 
 ## Installation
 
@@ -16,7 +31,7 @@ You can install the package via composer:
 composer require reinbier/laravel-holiday
 ```
 
-You should to publish and run the migrations:
+You should publish and run the migrations:
 
 ```bash
 php artisan vendor:publish --tag="holiday-migrations"
@@ -35,17 +50,40 @@ This is the contents of the published config file:
 return [
 
     /**
-     * The name of the table to use
+     * The name of the table to use. You can adjust this to suit your needs.
      */
     'table_name' => 'holidays',
+
+    /**
+     * If you want to use a different locale to generate holidays for,
+     * you can set it here. If left 'null' then locale will be applied
+     * from your app.locale value as a default.
+     */
+    'locale' => null,
     
 ];
 ```
 
 ## Usage
 
+To generate holidays for the current and next year, execute the command.
+
+```bash
+php artisan holiday:generate
+```
+
+Subsequently, you could schedule this command to run yearly so your table will always hold data when working with the Holiday model.
+
+To do that, place the following line into your Console/Kernel.php 'schedule' method:
+
 ```php
 
+    protected function schedule(Schedule $schedule)
+    {
+        // ...
+        
+        $schedule->command('holiday:generate')->yearly();
+    }
 ```
 
 ## Testing
@@ -65,7 +103,6 @@ If you discover any security related issues, please email support@reinbier.nl in
 ## Credits
 
 - [reinbier](https://github.com/Reinbier)
-- [All Contributors](../../contributors)
 
 ## License
 

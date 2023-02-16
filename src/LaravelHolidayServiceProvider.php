@@ -25,12 +25,18 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
             ->hasCommand(GenerateHolidays::class);
     }
 
-    public function boot()
+    public function packageRegistered()
     {
-        parent::boot();
+        $this->app->singleton('laravel-holiday', function ($app) {
+            return new LaravelHoliday(now()->year);
+        });
+    }
 
+    public function packageBooted()
+    {
         // enable business day calculator plugin for Carbon
         BusinessDay::enable(\Illuminate\Support\Carbon::class);
-        Carbon::setHolidaysRegion(config('app.locale'));
+
+        \Reinbier\LaravelHoliday\Facades\LaravelHoliday::setupCarbon();
     }
 }
