@@ -2,9 +2,11 @@
 
 namespace Reinbier\LaravelHoliday;
 
+use Carbon\Carbon;
+use Cmixin\BusinessDay;
+use Reinbier\LaravelHoliday\Commands\LaravelHolidayCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Reinbier\LaravelHoliday\Commands\LaravelHolidayCommand;
 
 class LaravelHolidayServiceProvider extends PackageServiceProvider
 {
@@ -19,7 +21,16 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
             ->name('laravel-holiday')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration()
+            ->hasMigration('create_laravel-holiday_table')
             ->hasCommand(LaravelHolidayCommand::class);
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        // enable business day calculator plugin for Carbon
+        BusinessDay::enable(\Illuminate\Support\Carbon::class);
+        Carbon::setHolidaysRegion(config('app.locale'));
     }
 }

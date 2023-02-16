@@ -12,7 +12,9 @@ class HolidayFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'year' => now()->year,
+            'days' => [],
+            'extra_days' => [],
         ];
     }
 }
