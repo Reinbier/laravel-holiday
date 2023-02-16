@@ -27,10 +27,21 @@ class Holiday extends Model
         'extra_days' => 'array',
     ];
 
-    public function scopeYear($query, $year)
+    /**
+     * Get the table associated with the model.
+     *
+     * @return string
+     */
+    public function getTable()
     {
-        return $query->where('year', $year);
+        return config('holiday.table_name', parent::getTable());
     }
+
+    /*
+     |--------------------------------------------------------------------------
+     | ATTRIBUTES
+     |--------------------------------------------------------------------------
+     */
 
     public function getHolidaysAttribute()
     {
@@ -43,5 +54,16 @@ class Holiday extends Model
             });
 
         return $holidays->merge(collect($this->extra_days)->pluck('date'));
+    }
+
+    /*
+     |--------------------------------------------------------------------------
+     | SCOPES
+     |--------------------------------------------------------------------------
+     */
+
+    public function scopeYear($query, $year)
+    {
+        return $query->where('year', $year);
     }
 }
