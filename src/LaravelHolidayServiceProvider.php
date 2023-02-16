@@ -4,7 +4,7 @@ namespace Reinbier\LaravelHoliday;
 
 use Carbon\Carbon;
 use Cmixin\BusinessDay;
-use Reinbier\LaravelHoliday\Commands\LaravelHolidayCommand;
+use Reinbier\LaravelHoliday\Commands\GenerateHolidays;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -22,7 +22,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_laravel-holiday_table')
-            ->hasCommand(LaravelHolidayCommand::class);
+            ->hasCommand(GenerateHolidays::class);
     }
 
     public function boot()
