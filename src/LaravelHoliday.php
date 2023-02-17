@@ -11,19 +11,31 @@ class LaravelHoliday
     private ?Holiday $holiday;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct(int $year)
     {
-        $this->holiday = Holiday::year($year)->first();
+        $this->setHoliday($year);
+    }
+
+    /**
+     * Helper method for setting the Holiday model in a fluent way.
+     */
+    public function forYear(int $year): self
+    {
+        $this->setHoliday($year);
+
+        $this->setupCarbon();
+
+        return $this;
     }
 
     /**
      * Setup Carbon by adding all registered holidays.
      * If there's no holiday model present, it sets the default holidays
-     * for the current locale
+     * for the current locale.
      */
-    public function setupCarbon(): void
+    public function setupCarbon(): self
     {
         $locale = config('holiday.locale') ?? config('app.locale', 'nl');
 
@@ -35,6 +47,8 @@ class LaravelHoliday
                 $this->getHolidays()->all()
             );
         }
+
+        return $this;
     }
 
     /**
@@ -47,22 +61,22 @@ class LaravelHoliday
      */
     public function getHolidays(): Collection
     {
-        $holidays = collect(Carbon::getYearHolidays($this->holiday->year))
-            ->filter(function ($item, $key) {
-                return in_array($key, $this->holiday->days);
-            })
-            ->map(function ($item) {
-                return Carbon::create($item)->format('Y-m-d');
-            });
-
-        return $holidays->merge(collect($this->holiday->extra_days)->pluck('date'));
+        return $this->holiday->days->merge(collect($this->holiday->extra_days)->pluck('date'));
     }
 
     /**
-     * Returns the underlying model
+     * Returns the underlying model.
      */
     public function model(): Holiday
     {
         return $this->holiday;
+    }
+
+    /**
+     * Sets the Holiday model based on the given year.
+     */
+    public function setHoliday(int $year): void
+    {
+        $this->holiday = Holiday::year($year)->first();
     }
 }
