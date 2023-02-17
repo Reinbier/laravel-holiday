@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
 it('can create a Holiday model', function () {
@@ -18,8 +19,19 @@ it('can add holidays by locale', function () {
         'days' => Carbon::getYearHolidays($holiday->year),
     ]);
 
-//    var_dump(\Reinbier\LaravelHoliday\Facades\LaravelHoliday::getHolidays()->all());
-
     expect($holiday)
-        ->days->toBeArray()->toHaveKeys(['new-year', 'easter', 'pentecost']);
+        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost']);
+});
+
+it('can retrieve holidays from the service container', function () {
+    $holiday = Holiday::factory()->create();
+
+    $holiday->update([
+        'days' => Carbon::getYearHolidays($holiday->year),
+    ]);
+
+    $holidays = LaravelHoliday::forYear($holiday->year)->getHolidays();
+
+    expect($holidays)
+        ->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost']);
 });
