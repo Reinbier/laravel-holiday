@@ -2,8 +2,8 @@
 
 namespace Reinbier\LaravelHoliday;
 
-use Carbon\Carbon;
 use Cmixin\BusinessDay;
+use Illuminate\Support\Carbon;
 use Reinbier\LaravelHoliday\Commands\GenerateHolidays;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -20,7 +20,6 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-holiday')
             ->hasConfigFile()
-            ->hasViews()
             ->hasMigration('create_laravel-holiday_table')
             ->hasCommand(GenerateHolidays::class);
     }
@@ -34,9 +33,10 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
-        // enable business day calculator plugin for Carbon
-        BusinessDay::enable(\Illuminate\Support\Carbon::class);
+        // enable business day plugin for Carbon
+        BusinessDay::enable(Carbon::class);
 
+        // setup holidays within Carbon
         \Reinbier\LaravelHoliday\Facades\LaravelHoliday::setupCarbon();
     }
 }
