@@ -4,6 +4,7 @@ namespace Reinbier\LaravelHoliday;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
 class LaravelHoliday
@@ -77,6 +78,10 @@ class LaravelHoliday
      */
     public function setHoliday(int $year): void
     {
-        $this->holiday = Holiday::year($year)->first();
+        if(Schema::hasTable(config('holiday.table_name'))) {
+            $this->holiday = Holiday::year($year)->first();
+        } else {
+            $this->holiday = null;
+        }
     }
 }
