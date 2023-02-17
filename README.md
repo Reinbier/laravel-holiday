@@ -15,13 +15,13 @@ represents a holiday, via `$carbon->isHoliday()`.
 
 ## Use cases
 
-For instance, when managing employees' timesheets. When filling in
+For instance, when managing employees' timesheet. When filling in
 the current week with hours you can show when a day is a holiday, 
 so they would not have to fill in their hours for that day.
 
 Another example would be when you want to show your store's opening hours.
-When echoing your openinghours for each day, you can check whether the
-given date is an holiday and show that you're closed.
+When echoing your opening hours for each day, you can check whether the
+given date is a holiday and say that you're closed this day.
 
 ## Installation
 
@@ -57,7 +57,7 @@ return [
     /**
      * If you want to use a different locale to generate holidays for,
      * you can set it here. If left 'null' then locale will be applied
-     * from your app.locale value as a default.
+     * from your `app.locale` value as a default.
      */
     'locale' => null,
     
@@ -84,6 +84,28 @@ To do that, place the following line into your Console/Kernel.php 'schedule' met
         
         $schedule->command('holiday:generate')->yearly();
     }
+```
+
+### Using the Facade
+
+The `LaravelHoliday` Facade gets automatically registered in the service container.
+The facade is a singleton and will hold the current year's Holiday model.
+It will set global holidays throughout your application so that you can check 
+any date for whether it's treated as a holiday according to your model.
+
+The facade also provides you with a couple of methods:
+
+```php
+use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
+
+// The Holiday model of the current year
+$holiday = LaravelHoliday::model();
+
+// All holiday-dates in a Collection
+$holidays = LaravelHoliday::getHolidays(); 
+
+// Set the Holiday model and chain methods
+LaravelHoliday::forYear(2023)->getHolidays();
 ```
 
 ## Testing
