@@ -22,7 +22,7 @@ class Holiday extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'days' => 'array',
+        'days' => 'collection',
         'extra_days' => 'array',
     ];
 
