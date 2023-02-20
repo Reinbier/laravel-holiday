@@ -13,6 +13,8 @@ These holidays are then injected into Carbon via the
 package. You can then simply see if a given Carbon instance 
 represents a holiday, via `$carbon->isHoliday()`.
 
+The benefits of the model are that you can easily add your own holidays, on top of the ones generated for the locale, and it will work the same way.
+
 ## Use cases
 
 For instance, when managing employees' timesheet. When filling in
