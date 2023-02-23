@@ -26,7 +26,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             $this->app->singleton('laravel-holiday', function ($app) {
                 return new LaravelHoliday(now()->year);
             });
@@ -35,7 +35,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             // enable business day plugin for Carbon
             BusinessDay::enable(Carbon::class);
 

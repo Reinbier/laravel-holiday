@@ -78,7 +78,7 @@ class LaravelHoliday
      */
     public function setHoliday(int $year): void
     {
-        if(Schema::hasTable(config('holiday.table_name'))) {
+        if (Schema::hasTable(config('holiday.table_name'))) {
             $this->holiday = Holiday::year($year)->first();
         } else {
             $this->holiday = null;
