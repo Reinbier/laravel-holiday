@@ -17,6 +17,7 @@ class LaravelHoliday
     public function __construct(int $year)
     {
         $this->setHoliday($year);
+        $this->setupCarbon();
     }
 
     /**
@@ -38,7 +39,7 @@ class LaravelHoliday
      */
     public function setupCarbon(): self
     {
-        $locale = config('holiday.locale') ?? config('app.locale', 'nl');
+        $locale = config('holiday.locale');
 
         if (is_null($this->holiday)) {
             Carbon::setHolidaysRegion($locale);

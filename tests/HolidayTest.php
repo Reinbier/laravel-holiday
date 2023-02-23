@@ -15,6 +15,8 @@ it('can create a Holiday model', function () {
 it('can add holidays by locale', function () {
     $holiday = Holiday::factory()->create();
 
+    Carbon::setHolidaysRegion(config('holiday.locale'));
+
     $holiday->update([
         'days' => Carbon::getYearHolidays($holiday->year),
     ]);
@@ -25,6 +27,8 @@ it('can add holidays by locale', function () {
 
 it('can retrieve holidays from the service container', function () {
     $holiday = Holiday::factory()->create();
+
+    Carbon::setHolidaysRegion(config('holiday.locale'));
 
     $holiday->update([
         'days' => Carbon::getYearHolidays($holiday->year),

@@ -10,9 +10,8 @@ return [
 
     /**
      * If you want to use a different locale to generate holidays for,
-     * you can set it here. If left 'null' then locale will be applied
-     * from your `app.locale` value as a default.
+     * you can set it here. For now, a sensible default is set.
      */
-    'locale' => null,
+    'locale' => config('app.locale', 'nl'),
 
 ];
