@@ -58,10 +58,14 @@ return [
 
     /**
      * If you want to use a different locale to generate holidays for,
-     * you can set it here. If left 'null' then locale will be applied
-     * from your `app.locale` value as a default.
+     * you can set it here. For now, a sensible default is set.
      */
-    'locale' => null,
+    'locale' => config('app.locale', 'nl'),
+
+    /**
+     * When true, sets the holidays for Carbon in the service container.
+     */
+    'enable_carbon' => false,
     
 ];
 ```
@@ -108,6 +112,17 @@ $holidays = LaravelHoliday::getHolidays();
 
 // Set the Holiday model and chain methods
 LaravelHoliday::forYear(2023)->getHolidays();
+```
+
+### Enable holidays in Carbon
+
+The package can automatically apply your stored holidays to Carbon instances so that, whenever you need to check a Carbon
+date to be a holiday, you simply can call `->isHoliday()` on that date.
+
+This setting is disabled by default. To enable this, set the value in the config `holiday.php`.
+
+```php
+'enable_carbon' => true,
 ```
 
 ## Testing
