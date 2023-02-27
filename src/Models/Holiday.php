@@ -46,4 +46,15 @@ class Holiday extends Model
     {
         return $query->where('year', $year);
     }
+
+    /*
+     |--------------------------------------------------------------------------
+     | FUNCTIONS
+     |--------------------------------------------------------------------------
+     */
+
+    public function getHolidays()
+    {
+        return $this->days->merge(collect($this->extra_days)->pluck('date', 'date'));
+    }
 }

@@ -4,6 +4,7 @@ namespace Reinbier\LaravelHoliday\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
 class GenerateHolidays extends Command
@@ -16,10 +17,12 @@ class GenerateHolidays extends Command
     {
         $current_year = now()->year;
 
+        LaravelHoliday::setupCarbon();
+
         $holiday = Holiday::firstOrCreate([
             'year' => $current_year,
         ], [
-            'days' => collect(Carbon::getYearHolidays($current_year))->keys(),
+            'days' => collect(Carbon::getYearHolidays($current_year)),
         ]);
 
         $next_year = now()->addYear()->year;
@@ -33,7 +36,7 @@ class GenerateHolidays extends Command
         $holiday = Holiday::firstOrCreate([
             'year' => $next_year,
         ], [
-            'days' => collect(Carbon::getYearHolidays($next_year))->keys(),
+            'days' => collect(Carbon::getYearHolidays($next_year)),
         ]);
 
         if ($holiday->wasRecentlyCreated) {

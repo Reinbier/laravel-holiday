@@ -45,7 +45,7 @@ class LaravelHoliday
             Carbon::setHolidaysRegion($locale);
         } else {
             Carbon::setHolidays(
-                config('holiday.locale') ?? config('app.locale', 'nl'),
+                config('holiday.locale', 'nl'),
                 $this->getHolidays()->all()
             );
         }
@@ -54,16 +54,12 @@ class LaravelHoliday
     }
 
     /**
-     * Returns the holidays as a collection.
-     *
-     * Because only the keys/names of the holidays are stored, a lookup to the actual
-     * dates via Carbon is required. It then filters the collection according
-     * to the stored keys and retrieves the corresponding dates. Also, merging the
+     * Returns the holidays as a collection. Also, merging the
      * extra days (if any) along the way.
      */
     public function getHolidays(): Collection
     {
-        return $this->holiday->days->merge(collect($this->holiday->extra_days)->pluck('date'));
+        return $this->holiday->getHolidays();
     }
 
     /**
