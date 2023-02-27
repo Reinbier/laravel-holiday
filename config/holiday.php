@@ -14,4 +14,9 @@ return [
      */
     'locale' => config('app.locale', 'nl'),
 
+    /**
+     * When true, sets the holidays for Carbon in the service container.
+     */
+    'enable_carbon' => false,
+
 ];

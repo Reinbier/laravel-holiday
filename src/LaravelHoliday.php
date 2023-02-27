@@ -57,15 +57,15 @@ class LaravelHoliday
      * Returns the holidays as a collection. Also, merging the
      * extra days (if any) along the way.
      */
-    public function getHolidays(): Collection
+    public function getHolidays(): ?Collection
     {
-        return $this->holiday->getHolidays();
+        return $this->holiday?->getHolidays();
     }
 
     /**
      * Returns the underlying model.
      */
-    public function model(): Holiday
+    public function model(): ?Holiday
     {
         return $this->holiday;
     }

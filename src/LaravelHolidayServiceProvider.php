@@ -35,5 +35,9 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
     {
         // enable business day plugin for Carbon
         BusinessDay::enable(Carbon::class);
+
+        if(config('holiday.enable_carbon')) {
+            \Reinbier\LaravelHoliday\Facades\LaravelHoliday::setupCarbon();
+        }
     }
 }
