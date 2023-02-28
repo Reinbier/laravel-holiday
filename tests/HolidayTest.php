@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
@@ -32,6 +33,23 @@ it('can add extra holidays', function () {
         ->toHaveKey('2000-07-06');
 });
 
+it('can check if a given date is a holiday', function () {
+    $holiday = freshHoliday(2000);
+
+    $holiday->update([
+        'extra_days' => [['date' => '2000-07-06']],
+    ]);
+
+    LaravelHoliday::forYear(2000)->setupCarbon();
+
+    expect(Carbon::make('2000-07-06')->isHoliday())
+        ->toBeTrue()
+        ->and(Carbon::make('2000-07-07')->isHoliday())
+        ->toBeFalse()
+        ->and(Carbon::make('2000-12-25')->isHoliday())
+        ->toBeTrue();
+});
+
 it('can retrieve holidays from the service container', function () {
     $holiday = freshHoliday();
 
@@ -51,6 +69,8 @@ it('can generate holidays with the command', function () {
         ->toHaveCount(2)
         ->and($holiday)
         ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost'])
+        ->toHaveKey('new-year', now()->startOfYear()->format('Y-m-d'))
         ->and($holiday_next_year)
-        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost']);
+        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost'])
+        ->toHaveKey('new-year', now()->addYear()->startOfYear()->format('Y-m-d'));
 });
