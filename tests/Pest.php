@@ -16,7 +16,7 @@ function freshHoliday($year = null): Holiday
     Carbon::setHolidaysRegion(config('holiday.locale'));
 
     $holiday->update([
-        'days' => collect(Carbon::getYearHolidays($holiday->year))->map->format('Y-m-d'),
+        'days' => collect(Carbon::getYearHolidays($holiday->year))->map(fn ($item, $key) => ['name' => $key, 'date' => $item->format('Y-m-d')])->values(),
     ]);
 
     return $holiday;

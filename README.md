@@ -1,4 +1,4 @@
-# Holidays in Laravel, the right way.
+# Custom holidays in Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/reinbier/laravel-holiday.svg?style=flat-square)](https://packagist.org/packages/reinbier/laravel-holiday)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/reinbier/laravel-holiday/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/reinbier/laravel-holiday/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -6,22 +6,19 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/reinbier/laravel-holiday.svg?style=flat-square)](https://packagist.org/packages/reinbier/laravel-holiday)
 
 This package helps by providing a Holiday model in your project with all 
-the holidays for a specific year.
+the holidays for a specific year. 
 
-These holidays are then injected into Carbon via the 
+By storing them in the database and automatically injected into Carbon via the 
 [BusinessDay](https://github.com/kylekatarnls/business-day) 
-package. You can then simply see if a given Carbon instance 
+package, you can simply see if a given Carbon instance 
 represents a holiday, via `$carbon->isHoliday()`.
 
-The benefits of the model are that you can easily add your own holidays, on top of the ones generated for the locale, and it will work the same way.
+The benefits of the model are that you can easily add your own holidays.
+On top of that, the package can generate holidays for the current locale.
 
 ## Use cases
 
-For instance, when managing employees' timesheet. When filling in
-the current week with hours you can show when a day is a holiday, 
-so they would not have to fill in their hours for that day.
-
-Another example would be when you want to show your store's opening hours.
+An example would be when you want to show your store's opening hours.
 When echoing your opening hours for each day, you can check whether the
 given date is a holiday and say that you're closed this day.
 
@@ -72,7 +69,7 @@ return [
 
 ## Usage
 
-To generate holidays for the current and next year, execute the command.
+To generate local holidays for the current and next year, execute the command.
 
 ```bash
 php artisan holiday:generate
@@ -111,13 +108,22 @@ $holiday = LaravelHoliday::model();
 $holidays = LaravelHoliday::getHolidays(); 
 
 // Set the Holiday model and chain methods
-LaravelHoliday::forYear(2023)->getHolidays();
+LaravelHoliday::forYear(2023)
+    ->addHoliday('2023-06-07', 'boss-birthday')
+    ->getHolidays();
+
+// Simply add multiple holidays by chaining
+LaravelHoliday::forYear(2023)
+    ->addHoliday('2023-06-07', 'boss-birthday')
+    ->addHoliday('2023-10-10', 'anniversary')
+    -> ...
 ```
 
 ### Enable holidays in Carbon
 
-The package can automatically apply your stored holidays to Carbon instances so that, whenever you need to check a Carbon
-date to be a holiday, you simply can call `->isHoliday()` on that date.
+The package can automatically apply your stored holidays to Carbon instances, 
+so that, whenever you need to check a date to be a holiday, you can 
+call `->isHoliday()` on that Carbon instance.
 
 This setting is disabled by default. To enable this, set the value in the config `holiday.php`.
 

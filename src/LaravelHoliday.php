@@ -47,7 +47,7 @@ class LaravelHoliday
         if (! is_null($this->holiday)) {
             Carbon::setHolidays(
                 $locale,
-                $this->getHolidays()->all()
+                $this->getHolidays()->pluck('date')->all()
             );
         }
 
@@ -55,12 +55,34 @@ class LaravelHoliday
     }
 
     /**
-     * Returns the holidays as a collection. Also, merging the
-     * extra days (if any) along the way.
+     * Returns the holidays as a collection.
      */
-    public function getHolidays(): ?Collection
+    public function getHolidays(): Collection
     {
-        return $this->holiday?->getHolidays();
+        return $this->holiday?->days ?? collect();
+    }
+
+    /**
+     * Add one or more holidays. When a string or array of strings is given, make
+     * sure to set the proper format as well.
+     */
+    public function addHoliday(Carbon|string $holiday, string $name = null, string $format = 'Y-m-d'): self
+    {
+        if ($this->model()) {
+            // Sanitize the input, we need to make sure we can work with the provided value
+            if (is_string($holiday)) {
+                $holiday = Carbon::createFromFormat($format, $holiday);
+            }
+
+            $model = $this->model();
+            $model->days->push(['name' => $name, 'date' => $holiday->format('Y-m-d')]);
+            $model->save();
+
+            // refresh both the Holiday and Carbon
+            $this->refresh();
+        }
+
+        return $this;
     }
 
     /**
@@ -69,6 +91,17 @@ class LaravelHoliday
     public function model(): ?Holiday
     {
         return $this->holiday;
+    }
+
+    /**
+     * Refreshes both the Holiday model and the Carbon instance
+     * to set the proper holidays.
+     */
+    private function refresh(): void
+    {
+        $this->holiday = $this->holiday->fresh();
+
+        $this->setupCarbon();
     }
 
     /**
