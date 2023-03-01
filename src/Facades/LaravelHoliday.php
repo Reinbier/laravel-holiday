@@ -2,6 +2,7 @@
 
 namespace Reinbier\LaravelHoliday\Facades;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Reinbier\LaravelHoliday\Models\Holiday;
@@ -12,6 +13,7 @@ use Reinbier\LaravelHoliday\Models\Holiday;
  * @method self setupCarbon()
  * @method Holiday model()
  * @method Collection getHolidays()
+ * @method self addHoliday(string|Carbon $holiday)
  *
  * @see \Reinbier\LaravelHoliday\LaravelHoliday
  */
