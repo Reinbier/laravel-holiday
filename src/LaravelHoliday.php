@@ -47,7 +47,7 @@ class LaravelHoliday
         if (! is_null($this->holiday)) {
             Carbon::setHolidays(
                 $locale,
-                $this->getHolidays()->all()
+                $this->getHolidays()->pluck('date')->all()
             );
         }
 

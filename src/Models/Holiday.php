@@ -2,9 +2,14 @@
 
 namespace Reinbier\LaravelHoliday\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
+/**
+ * @property Collection $days
+ */
 class Holiday extends Model
 {
     use HasFactory;
@@ -14,7 +19,7 @@ class Holiday extends Model
      *
      * @var array<string>
      */
-    protected $fillable = ['year', 'days', 'extra_days'];
+    protected $fillable = ['year', 'days'];
 
     /**
      * The attributes that should be cast to native types.
@@ -22,8 +27,7 @@ class Holiday extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'days' => 'collection',
-        'extra_days' => 'array',
+        'days' => AsCollection::class,
     ];
 
     /**
@@ -45,16 +49,5 @@ class Holiday extends Model
     public function scopeYear($query, $year)
     {
         return $query->where('year', $year);
-    }
-
-    /*
-     |--------------------------------------------------------------------------
-     | FUNCTIONS
-     |--------------------------------------------------------------------------
-     */
-
-    public function getHolidays()
-    {
-        return $this->days->merge(collect($this->extra_days)->pluck('date', 'date'));
     }
 }
