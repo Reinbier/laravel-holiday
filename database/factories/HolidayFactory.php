@@ -14,7 +14,6 @@ class HolidayFactory extends Factory
         return [
             'year' => now()->year,
             'days' => [],
-            'extra_days' => [],
         ];
     }
 }

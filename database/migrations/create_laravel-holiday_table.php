@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('year')->unique();
             $table->text('days')->nullable();
-            $table->text('extra_days')->nullable();
             $table->timestamps();
         });
     }
