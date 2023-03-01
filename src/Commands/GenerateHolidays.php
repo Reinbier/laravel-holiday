@@ -22,7 +22,7 @@ class GenerateHolidays extends Command
         $holiday = Holiday::firstOrCreate([
             'year' => $current_year,
         ], [
-            'days' => collect(Carbon::getYearHolidays($current_year))->map(fn ($item, $key) => ['name' => $key, 'date' => $item->format('Y-m-d')])->values(),
+            'days' => collect(Carbon::getYearHolidays($current_year))->map(fn ($item, $key) => ['name' => $item->getHolidayName(), 'date' => $item->format('Y-m-d')])->values(),
         ]);
 
         $next_year = now()->addYear()->year;
@@ -36,7 +36,7 @@ class GenerateHolidays extends Command
         $holiday = Holiday::firstOrCreate([
             'year' => $next_year,
         ], [
-            'days' => collect(Carbon::getYearHolidays($next_year))->map(fn ($item, $key) => ['name' => $key, 'date' => $item->format('Y-m-d')])->values(),
+            'days' => collect(Carbon::getYearHolidays($next_year))->map(fn ($item, $key) => ['name' => $item->getHolidayName(), 'date' => $item->format('Y-m-d')])->values(),
         ]);
 
         if ($holiday->wasRecentlyCreated) {

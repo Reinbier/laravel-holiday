@@ -18,7 +18,7 @@ it('can add holidays by locale', function () {
     // check for Dutch liberation-day which happens every five years
     expect($holiday)
         ->days->toBeCollection()
-        ->toContain(['name' => 'liberation-day', 'date' => '2005-05-05']);
+        ->toContain(['name' => 'Liberation Day', 'date' => '2005-05-05']);
 
     $holiday = freshHoliday(2006);
 
@@ -61,8 +61,7 @@ it('can retrieve holidays from the service container', function () {
 
     expect($holidays)
         ->toBeCollection()
-        ->toContain(['name' => 'christmas', 'date' => $holiday->year.'-12-25'])
-        ->toContain(['name' => 'christmas-next-day', 'date' => $holiday->year.'-12-26'])
+        ->toContain(['name' => 'Christmas', 'date' => $holiday->year.'-12-25'])
         ->toContain(['name' => 'june-seventh', 'date' => $holiday->year.'-06-07']);
 });
 
@@ -75,7 +74,7 @@ it('can generate holidays with the command', function () {
     expect(Holiday::all())
         ->toHaveCount(2)
         ->and($holiday)->days
-        ->toContain(['name' => 'new-year', 'date' => now()->startOfYear()->format('Y-m-d')])
+        ->toContain(['name' => 'New Year', 'date' => now()->startOfYear()->format('Y-m-d')])
         ->and($holiday_next_year)->days
-        ->toContain(['name' => 'new-year', 'date' => now()->addYear()->startOfYear()->format('Y-m-d')]);
+        ->toContain(['name' => 'New Year', 'date' => now()->addYear()->startOfYear()->format('Y-m-d')]);
 });

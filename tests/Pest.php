@@ -13,10 +13,10 @@ function freshHoliday($year = null): Holiday
 
     $holiday = Holiday::factory()->create(['year' => $year]);
 
-    Carbon::setHolidaysRegion(config('holiday.locale'));
+    Carbon::setHolidaysRegion('nl');
 
     $holiday->update([
-        'days' => collect(Carbon::getYearHolidays($holiday->year))->map(fn ($item, $key) => ['name' => $key, 'date' => $item->format('Y-m-d')])->values(),
+        'days' => collect(Carbon::getYearHolidays($holiday->year))->map(fn ($item, $key) => ['name' => $item->getHolidayName(), 'date' => $item->format('Y-m-d')])->values(),
     ]);
 
     return $holiday;
