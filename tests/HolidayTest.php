@@ -17,34 +17,38 @@ it('can add holidays by locale', function () {
 
     // check for Dutch liberation-day which happens every five years
     expect($holiday)
-        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'liberation-day']);
+        ->days->toBeCollection()
+        ->toContain(['name' => 'liberation-day', 'date' => '2005-05-05']);
+
+    $holiday = freshHoliday(2006);
+
+    // check for Dutch liberation-day which happens every five years
+    expect($holiday)
+        ->days->toBeCollection()
+        ->not->toContain('liberation-day', '2006-05-05');
 });
 
-it('can add extra holidays', function () {
+it('can add holidays', function () {
     $holiday = freshHoliday(2000);
 
-    $holiday->update([
-        'extra_days' => [['date' => '2000-07-06']],
-    ]);
+    LaravelHoliday::forYear(2000)->addHoliday('2000-03-04', 'boss-birthday');
 
     expect($holiday)
         ->year->toBe(2000)
-        ->and($holiday->getHolidays())
-        ->toHaveKey('2000-07-06');
+        ->and($holiday->fresh())
+        ->days->last()
+        ->toHaveKey('name', 'boss-birthday')
+        ->toHaveKey('date', '2000-03-04');
 });
 
 it('can check if a given date is a holiday', function () {
-    $holiday = freshHoliday(2000);
+    freshHoliday(2000);
 
-    $holiday->update([
-        'extra_days' => [['date' => '2000-07-06']],
-    ]);
+    LaravelHoliday::forYear(2000)->addHoliday('2000-03-04');
 
-    LaravelHoliday::forYear(2000)->setupCarbon();
-
-    expect(Carbon::make('2000-07-06')->isHoliday())
+    expect(Carbon::make('2000-03-04')->isHoliday())
         ->toBeTrue()
-        ->and(Carbon::make('2000-07-07')->isHoliday())
+        ->and(Carbon::make('2000-03-05')->isHoliday())
         ->toBeFalse()
         ->and(Carbon::make('2000-12-25')->isHoliday())
         ->toBeTrue();
@@ -53,10 +57,13 @@ it('can check if a given date is a holiday', function () {
 it('can retrieve holidays from the service container', function () {
     $holiday = freshHoliday();
 
-    $holidays = LaravelHoliday::forYear($holiday->year)->getHolidays();
+    $holidays = LaravelHoliday::forYear($holiday->year)->addHoliday($holiday->year.'-06-07', 'june-seventh')->getHolidays();
 
     expect($holidays)
-        ->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost']);
+        ->toBeCollection()
+        ->toContain(['name' => 'christmas', 'date' => $holiday->year.'-12-25'])
+        ->toContain(['name' => 'christmas-next-day', 'date' => $holiday->year.'-12-26'])
+        ->toContain(['name' => 'june-seventh', 'date' => $holiday->year.'-06-07']);
 });
 
 it('can generate holidays with the command', function () {
@@ -67,10 +74,8 @@ it('can generate holidays with the command', function () {
 
     expect(Holiday::all())
         ->toHaveCount(2)
-        ->and($holiday)
-        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost'])
-        ->toHaveKey('new-year', now()->startOfYear()->format('Y-m-d'))
-        ->and($holiday_next_year)
-        ->days->toBeCollection()->toHaveKeys(['new-year', 'easter', 'pentecost'])
-        ->toHaveKey('new-year', now()->addYear()->startOfYear()->format('Y-m-d'));
+        ->and($holiday)->days
+        ->toContain(['name' => 'new-year', 'date' => now()->startOfYear()->format('Y-m-d')])
+        ->and($holiday_next_year)->days
+        ->toContain(['name' => 'new-year', 'date' => now()->addYear()->startOfYear()->format('Y-m-d')]);
 });
