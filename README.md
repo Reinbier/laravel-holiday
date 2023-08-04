@@ -119,6 +119,17 @@ LaravelHoliday::forYear(2023)
     -> ...
 ```
 
+### Future holidays
+If you don't want to be limited to only the current year's holidays, you can
+fetch all future holidays as well using the helper method on the facade: `getFutureHolidays()`.
+```php
+use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
+
+$future_holidays = LaravelHoliday::getFutureHolidays();
+// You may optionally specify a year, until when to retrieve holidays 
+$future_holidays = LaravelHoliday::getFutureHolidays(2035); 
+```
+
 ### Enable holidays in Carbon
 
 The package can automatically apply your stored holidays to Carbon instances, 
