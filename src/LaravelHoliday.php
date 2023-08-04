@@ -63,6 +63,20 @@ class LaravelHoliday
     }
 
     /**
+     * Retrieve future holidays from this year up until
+     * a given year as a single collection.
+     */
+    public function getFutureHolidays(int $until_year = null): Collection
+    {
+        // when left null, make sure to fetch all holidays until way up in the future
+        if (is_null($until_year)) {
+            $until_year = now()->addYears(100)->year;
+        }
+
+        return Holiday::where('year', '<=', $until_year)->pluck('days')->flatten(1);
+    }
+
+    /**
      * Add one or more holidays. When a string or array of strings is given, make
      * sure to set the proper format as well.
      */

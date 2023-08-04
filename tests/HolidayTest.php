@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
@@ -63,6 +64,31 @@ it('can retrieve holidays from the service container', function () {
         ->toBeCollection()
         ->toContain(['name' => 'Christmas', 'date' => $holiday->year.'-12-25'])
         ->toContain(['name' => 'june-seventh', 'date' => $holiday->year.'-06-07']);
+});
+
+it('can retrieve future holidays', function () {
+    $holiday = freshHoliday();
+    $holiday_next_year = freshHoliday(now()->addYear()->year);
+
+    $holidays = LaravelHoliday::getFutureHolidays();
+    expect($holidays)
+        ->toBeCollection()
+        ->toContain(['name' => 'Christmas', 'date' => $holiday->year.'-12-25'])
+        ->toContain(['name' => 'Christmas', 'date' => $holiday_next_year->year.'-12-25']);
+});
+
+it('can retrieve future holidays up until a given year', function () {
+    $holiday = freshHoliday();
+    $holiday_next_year = freshHoliday(now()->addYear()->year);
+    $holiday_second_year = freshHoliday(now()->addYears(2)->year);
+
+    $holidays = LaravelHoliday::getFutureHolidays(now()->addYear()->year);
+
+    expect($holidays)
+        ->toBeCollection()
+        ->toContain(['name' => 'Christmas', 'date' => $holiday->year.'-12-25'])
+        ->toContain(['name' => 'Christmas', 'date' => $holiday_next_year->year.'-12-25'])
+        ->not->toContain(['name' => 'Christmas', 'date' => $holiday_second_year->year.'-12-25']);
 });
 
 it('can generate holidays with the command', function () {
