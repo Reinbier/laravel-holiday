@@ -3,8 +3,8 @@
 namespace Reinbier\LaravelHoliday\Commands;
 
 use Carbon\Carbon;
+use Cmixin\BusinessDay;
 use Illuminate\Console\Command;
-use Reinbier\LaravelHoliday\Facades\LaravelHoliday;
 use Reinbier\LaravelHoliday\Models\Holiday;
 
 class GenerateHolidays extends Command
@@ -15,9 +15,13 @@ class GenerateHolidays extends Command
 
     public function handle(): int
     {
-        $current_year = now()->year;
+        // enable business day plugin for Carbon, which also provides the holidays
+        BusinessDay::enable(\Illuminate\Support\Carbon::class);
+        $locale = config('holiday.locale', 'nl');
 
-        LaravelHoliday::setupCarbon();
+        Carbon::setHolidaysRegion($locale);
+
+        $current_year = now()->year;
 
         $holiday = Holiday::firstOrCreate([
             'year' => $current_year,
