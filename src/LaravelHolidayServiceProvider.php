@@ -26,7 +26,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
-        if($this->app->runningInConsole()) {
+        if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
             return;
         }
 
@@ -37,7 +37,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
-        if($this->app->runningInConsole()) {
+        if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
             return;
         }
 
