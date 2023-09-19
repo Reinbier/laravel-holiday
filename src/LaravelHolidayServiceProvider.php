@@ -37,12 +37,12 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
+        // enable business day plugin for Carbon
+        BusinessDay::enable(Carbon::class);
+        
         if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
             return;
         }
-
-        // enable business day plugin for Carbon
-        BusinessDay::enable(Carbon::class);
 
         if (config('holiday.enable_carbon')) {
             \Reinbier\LaravelHoliday\Facades\LaravelHoliday::setupCarbon();
