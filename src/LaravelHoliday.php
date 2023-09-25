@@ -73,7 +73,7 @@ class LaravelHoliday
             $until_year = now()->addYears(100)->year;
         }
 
-        return Holiday::where('year', '<=', $until_year)->pluck('days')->flatten(1);
+        return Holiday::where('year', '>=', now()->year)->where('year', '<=', $until_year)->pluck('days')->flatten(1);
     }
 
     /**
