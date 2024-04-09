@@ -26,7 +26,7 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
-        if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
+        if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             return;
         }
 
@@ -39,8 +39,8 @@ class LaravelHolidayServiceProvider extends PackageServiceProvider
     {
         // enable business day plugin for Carbon
         BusinessDay::enable(Carbon::class);
-        
-        if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
+
+        if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             return;
         }
 

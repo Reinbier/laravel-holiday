@@ -66,7 +66,7 @@ class LaravelHoliday
      * Retrieve future holidays from this year up until
      * a given year as a single collection.
      */
-    public function getFutureHolidays(int $until_year = null): Collection
+    public function getFutureHolidays(?int $until_year = null): Collection
     {
         // when left null, make sure to fetch all holidays until way up in the future
         if (is_null($until_year)) {
@@ -80,7 +80,7 @@ class LaravelHoliday
      * Add one or more holidays. When a string or array of strings is given, make
      * sure to set the proper format as well.
      */
-    public function addHoliday(Carbon|string $holiday, string $name = null, string $format = 'Y-m-d'): self
+    public function addHoliday(Carbon|string $holiday, ?string $name = null, string $format = 'Y-m-d'): self
     {
         if ($this->model()) {
             // Sanitize the input, we need to make sure we can work with the provided value
