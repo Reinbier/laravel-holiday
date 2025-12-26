@@ -22,6 +22,14 @@ An example would be when you want to show your store's opening hours.
 When echoing your opening hours for each day, you can check whether the
 given date is a holiday and say that you're closed this day.
 
+### Versioning
+For the sake of maintainability and testability, this package uses different major versions to support Laravel, make sure to pick the right one based on the table below.
+
+| Laravel version | Package version |
+|-----------------|-----------------|
+| v9 & 10         | v2.x            |
+| v11 & 12        | v3.x            |
+
 ## Installation
 
 You can install the package via composer:
