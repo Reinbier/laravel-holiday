@@ -29,6 +29,7 @@ For the sake of maintainability and testability, this package uses different maj
 |-----------------|-----------------|
 | v9 & 10         | v2.x            |
 | v11 & 12        | v3.x            |
+| v13             | v3.1.x          |
 
 ## Installation
 
